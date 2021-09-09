@@ -2,48 +2,34 @@ package engeto;
 
 public class Main {
 
-    public static final Integer INCREMENT_TARGET = 10;
+    public static final int PHILOSOPHERS_NUMBER = 10;
+    public static final int PORTIONS_NUMBER = 10000;
 
     public static void main(String[] args) {
-        Philosopher[]philosophers = new Philosopher[5];
+        // Creation of space in memory for array of 10 philosophers
+        Philosopher[]philosophers = new Philosopher[PHILOSOPHERS_NUMBER];
+        // Creation of space in memory for array of 10 forks
         Fork[] forks = new Fork[philosophers.length];
 
+        // filling arrays by fork objects
         for(int i=0; i< forks.length; i++){
             forks[i] = new Fork(i+1);
         }
-
+        // filling arrays by philosopher objects
         for(int i=0; i<philosophers.length; i++){
             //Fork forkLeft = forks[i];
             //Fork forkRight = forks[(i+1)%forks.length];
 
+            // Deadlock treatment: last philosopher ask for right fork first (the others for left fork first)
             if (i == philosophers.length - 1)
-               philosophers[i] = new Philosopher(i+1,forks[(i+1)%forks.length], forks[i]);
+               philosophers[i] = new Philosopher(i+1,forks[(i+1)%forks.length], forks[i], PORTIONS_NUMBER);
             else
-                philosophers[i] = new Philosopher(i+1,forks[i],forks[(i+1)%forks.length]);
+                philosophers[i] = new Philosopher(i+1,forks[i],forks[(i+1)%forks.length], PORTIONS_NUMBER);
 
-
-
+            // Thread creation
                 Thread thread = new Thread(philosophers[i], "Philosopher" + (i + 1));
                 thread.start();
             }
-
-
-
-
-
-
-
-//        Fork fork0 = new Fork(0);
-//        Fork fork1 = new Fork(1);
-//        Fork fork2 = new Fork(2);
-//        Fork fork3 = new Fork(3);
-//        Fork fork4 = new Fork(4);
-//
-//        Philosopher philosopher1 = new Philosopher(0, fork0, fork1);
-//        Philosopher philosopher2 = new Philosopher(1, fork1, fork2);
-//        Philosopher philosopher3 = new Philosopher(2, fork2, fork3);
-//        Philosopher philosopher4 = new Philosopher(3, fork3, fork4);
-//        Philosopher philosopher5 = new Philosopher(4, fork4, fork0);
 
     }
 }

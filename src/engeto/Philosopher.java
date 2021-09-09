@@ -4,34 +4,35 @@ public class Philosopher implements Runnable {
     private int i;
     private Fork forkLeft;
     private Fork forkRight;
+    private int portionNumber;
 
-    public Philosopher(int i, Fork forkLeft, Fork forkRight){
+    public Philosopher(int i, Fork forkLeft, Fork forkRight, int steps){
         this.i = i;
         this.forkLeft = forkLeft;
         this.forkRight= forkRight;
+        this.portionNumber = steps;
     }
 
-    private void doAction(String action) throws InterruptedException {
+    //Method which print curent thread and his action into console
+    private void doAction(String action) {
         System.out.println(Thread.currentThread().getName() + " " + action);
-
     }
 
     @Override
     public void run() {
-        try {
-            while (true) {
-                doAction(System.nanoTime() + ": Thinking"); // thinking
+        //Cycle for eating demanded portions
+            for (int i = 0; i < portionNumber; i++) {
+                doAction(": Thinking");
+                //It ensure that only one thread will be used during left fork acquiring
                 synchronized (forkLeft) {
-                    doAction(System.nanoTime() + ": Picked up left fork");
+                    doAction(": Picked up left fork");
+                    //It ensure that only one thread will be used during right fork acquiring
                     synchronized (forkRight) {
-                        doAction(System.nanoTime() + ": Picked up right fork - eating"); // eating
-                        doAction(System.nanoTime() + ": Put down right fork");
+                        doAction(": Picked up right fork - eating");
+                        doAction(": Put down right fork");
                     }
-                    doAction(System.nanoTime() + ": Put down left fork. Returning to thinking");
+                    doAction(": Put down left fork. Returning to thinking");
                 }
             }
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
     }
 }
